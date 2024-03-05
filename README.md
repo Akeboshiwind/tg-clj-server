@@ -16,7 +16,8 @@ are only called by a subset of users.
 Use as a dependency in `deps.edn` or `bb.edn`:
 
 ```clojure
-io.github.akeboshiwind/tg-clj-server {:git/tag "v0.1.0" :git/sha ""}
+io.github.akeboshiwind/tg-clj {:git/tag "v0.2.1" :git/sha "1a913bc"}
+io.github.akeboshiwind/tg-clj-server {:git/tag "v0.1.0" :git/sha "a32c34"}
 ```
 
 ## Usage
