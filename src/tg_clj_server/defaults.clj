@@ -1,4 +1,5 @@
 (ns tg-clj-server.defaults
+  (:refer-clojure :exclude [atom])
   (:require [tg-clj-server.simple-router :as router]
             [tg-clj-server.middleware.invoke :as invoke]
             [tg-clj-server.middleware.me :as me]
@@ -21,14 +22,15 @@
                 E.g. {:middleware [middleware1
                                    [middleware2 arg1 arg2]]
   :store/path       - Set the path to persist the store to as edn.
+  :store/atom       - An external atom to use at the store.
   :router/not-found - The handler to use when a route is not found."
   [routes & {:keys [middleware]
-             :store/keys [path]
+             :store/keys [path atom]
              :router/keys [not-found]}]
   (-> router/execute-route
       (u/chain-middleware middleware)
       ; Before the middleware so they have access to the store
-      (store/simple-store-middleware path)
+      (store/simple-store-middleware {:path path :atom atom})
       (router/select-route-middleware routes {:not-found not-found})
       ; Before the router, required for `u/command?` which may be used in routes
       me/me-middleware

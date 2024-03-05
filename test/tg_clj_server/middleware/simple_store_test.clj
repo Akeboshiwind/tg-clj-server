@@ -53,19 +53,24 @@
 
   (testing "In-memory stores lose data between restarts"
     (let [; Create first middleware instance
+          last-store (atom :unset)
           handler (store/simple-store-middleware
-                   (fn [_request]
+                   (fn [{:keys [store]}]
+                     (reset! last-store store)
                      {:set-store {:a 1}}))]
       ; Set the store
-      (handler {}))
+      (handler {})
+      (is (= nil @last-store))
+      (handler {})
+      (is (= {:a 1} @last-store)))
     (let [; Create a new middleware instance
-          final-request (atom :unset)
+          last-store (atom :unset)
           handler (store/simple-store-middleware
-                   (fn [request]
-                     (reset! final-request request)))]
+                   (fn [{:keys [store]}]
+                     (reset! last-store store)))]
       ; Get the store
       (handler {})
-      (is (= {:store nil} @final-request))))
+      (is (= nil @last-store))))
 
   (testing "File stores persist data between restarts"
     (with-delete [tmp (create-temp-file "store" ".edn")]
@@ -74,14 +79,30 @@
         (let [; Create first middleware instance
               handler (-> (fn [_request]
                             {:set-store data})
-                          (store/simple-store-middleware path))]
+                          (store/simple-store-middleware {:path path}))]
           ; Set the store
           (handler {}))
         (let [; Create a new middleware instance
               final-request (atom :unset)
               handler (-> (fn [request]
                             (reset! final-request request))
-                          (store/simple-store-middleware path))]
+                          (store/simple-store-middleware {:path path}))]
           ; Get the store
           (handler {})
-          (is (= {:store data} @final-request)))))))
+          (is (= {:store data} @final-request))))))
+
+  (testing "The user can provide thir own atom"
+    (let [external-atom (atom nil)
+          data {:a 1}
+          last-store (atom :unset)
+          handler (-> (fn [{:keys [store]}]
+                        (reset! last-store store)
+                        {:set-store data})
+                      (store/simple-store-middleware
+                       {:atom external-atom}))]
+      ; Set the store
+      (handler {})
+      (is (= data @external-atom))
+      ; Get the store via middleware
+      (handler {})
+      (is (= data @last-store)))))

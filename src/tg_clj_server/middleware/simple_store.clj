@@ -16,11 +16,13 @@
   
   If the response contains :set-store the store will be updated.
 
-  If a `path` is provided to the middleware then the store is saved on update
-  as edn to a file at `path`.
-  Otherwise the store is in-memory only and will be lost on server restart.
+  Accepts a map of options:
+  :path - The path to save the store to as edn.
+          If not provided the store is in-memory only.
+  :atom - An external atom to use as the store.
 
-  One store is available per instance of this middleware.
+  One store is available per instance of this middleware, unless an :atom is
+  provided.
   
   # Example handler
   (defn handler [{:keys [store]}]
@@ -31,11 +33,13 @@
        :request {:text \"Loading store\"}
        :set-store {:a 1}}))"
   ([handler]
-   (simple-store-middleware handler nil))
-  ([handler path]
-   (let [store (atom (if path
-                       (load-edn path)
-                       nil))]
+   (simple-store-middleware handler {}))
+  ([handler {:keys [path] external-atom :atom}]
+   (let [store (if external-atom
+                 external-atom
+                 (atom nil))]
+     (assert (instance? clojure.lang.Atom store) ":atom must be an Atom")
+     (reset! store (if path (load-edn path) nil))
      (fn [request]
        (let [response (-> request
                           (assoc :store @store)
