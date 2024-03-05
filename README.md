@@ -164,3 +164,17 @@ You can indicate a route is only for admins with the `:admin-only` key:
 Make sure to set `:store/path` if you want these admins persisted between restarts!
 
 See the `with-admin` example for a more detailed look.
+
+## Dev
+
+`clj -M:dev`
+
+To run tests:
+
+`clj -X:dev:test`
+
+## Releasing
+
+1. Tag the commit `v<version>`
+2. `git push --tags`
+2. Update the README.md with the new version and git hash
