@@ -78,6 +78,9 @@
     (tg-poll/run-server client app)))
 
 (comment
+  ;; Run this to start
+  (def f (future (main)))
+
   ;; Available commands:
   ;; - /start - starts a timer
   ;; - /status - shows the time elapsed since the timer was started
@@ -94,4 +97,6 @@
   ;; Try /admin_list to see who's an admin
   ;; Try it in another group chat
   ;; Try /admin_remove @your_username to reset the admin list
-  (main))
+
+  ;; Run this to stop
+  (future-cancel f))

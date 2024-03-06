@@ -40,6 +40,9 @@
     (tg-poll/run-server client app)))
 
 (comment
+  ;; Run this to start
+  (def f (future (main)))
+
   ;; Available commands:
   ;; - /reply - Replies with the count of calls so far and increases the count
   ;;
@@ -47,4 +50,6 @@
   ;; Then try stopping the repl and then try again.
   ;; You'll notice that the count is persisted.
   ;; Take a look at /tmp/store.edn
-  (main))
+
+  ;; Run this to stop
+  (future-cancel f))

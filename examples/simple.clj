@@ -52,8 +52,13 @@
     (tg-poll/run-server client app)))
 
 (comment
+  ;; Run this to start
+  (def f (future (main)))
+
   ;; Available commands:
   ;; - /hello - Posts a message after the command is input
   ;;
   ;; All other messages are replied to
-  (main))
+
+  ;; Run this to stop
+  (future-cancel f))
