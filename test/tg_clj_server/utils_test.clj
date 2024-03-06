@@ -3,7 +3,8 @@
   (:require [clojure.test :refer [deftest testing is]]
             [tg-clj-server.utils :as u]
             [tg-clj-server.middleware.me :as me]
-            [tg-clj.core :as tg]))
+            [tg-clj.core :as tg]
+            [tg-clj-server.test-utils :as tu]))
 
 (deftest valid-command?-test
   (is (u/valid-command? "/version"))
@@ -104,7 +105,11 @@
                                           :wait-time wait-time})))
         ; TODO: Does this make sense or is there a bug?
         ; 3 retries + 1 initial call
-        (is (= [0 1 2 3] @wait-time-args))))))
+        (is (= [0 1 2 3] @wait-time-args)))))
+
+  (let [wait #(Thread/sleep 1000)]
+    (tu/test-can-be-cancelled
+     #(u/retry wait {:max-retries 3 :wait-time 1000}))))
 
 (deftest normalize-middleware-test
   (is (= [[1] [2] [3] [4 5]]

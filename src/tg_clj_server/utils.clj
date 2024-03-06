@@ -75,6 +75,9 @@
                  {:ok true
                   :ret (f)}
                  (catch Throwable t
+                   ;; Allow interrupts to bubble up
+                   (when (instance? InterruptedException t)
+                     (throw t))
                    {:ok false
                     :throwable t}))]
            (if ok
