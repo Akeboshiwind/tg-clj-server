@@ -2,7 +2,8 @@
   (:require [clojure.test :refer [deftest testing is]]
             [tg-clj.core :as tg]
             [tg-clj-server.poll :as poll]
-            [tg-clj-server.utils :as u])
+            [tg-clj-server.utils :as u]
+            [tg-clj-server.test-utils :as tu])
   (:import (clojure.lang ExceptionInfo)))
 
 (deftest handle-update!-test
@@ -27,7 +28,13 @@
     (let [handler (fn [_] (throw (Exception. "My Error")))]
       (is (nil? (poll/handle-update! {:client :client
                                       :handler handler
-                                      :updates [1 2 3]}))))))
+                                      :updates [1 2 3]})))))
+
+  (let [wait-handler (fn [_] (Thread/sleep 1000))]
+    (tu/test-can-be-cancelled
+     #(poll/handle-update! {:client :client
+                            :handler wait-handler
+                            :updates [1 2 3]}))))
 
 (deftest next-updates-test
   (testing "Advances to the next update"
@@ -101,7 +108,14 @@
                       :fetch/wait-time (constantly 0)}
                      :myRequest))))
         (testing "Sleeps for some time"
-          (is @sleep-called?))))))
+          (is @sleep-called?)))))
+
+  (with-redefs [tg/invoke (fn [_client _request]
+                            (Thread/sleep 1000))]
+    (tu/test-can-be-cancelled
+     #(poll/fetch-updates! {:client :client
+                            :fetch/wait-time (constantly 0)}
+                           :myRequest))))
 
 (deftest concat-updates-test
   (is (= {:updates []}

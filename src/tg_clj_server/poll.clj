@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [update])
   (:require [tg-clj.core :as tg]
             [clojure.tools.logging :as log]
-            [tg-clj-server.utils :as u]))
+            [tg-clj-server.utils :as u])
+  (:import (java.lang InterruptedException)))
 
 (defn handle-update! [{:keys [client handler updates]}]
   (when-let [update (first updates)]
@@ -10,6 +11,9 @@
       (log/info "Processing update" (:update_id update))
       (handler {:client client :update update})
       (catch Throwable t
+        ;; Allow interrupts to bubble up
+        (when (instance? InterruptedException t)
+          (throw t))
         (log/error t "Failed to process update" (:update_id update))
          ;; Throw away errors, middleware can handle them
         nil))))
@@ -37,6 +41,9 @@
           (log/info "Fetching updates")
           (tg/invoke client get-updates-request)
           (catch Throwable t
+            ;; Allow interrupts to bubble up
+            (when (instance? InterruptedException t)
+              (throw t))
             t))]
     (if-not (instance? Throwable response)
       (if (:ok response)
