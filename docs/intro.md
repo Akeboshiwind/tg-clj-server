@@ -16,12 +16,11 @@ To build an app without using `make-app` see `examples/no_defaults.clj`.
 
 There are two ways to write a telegram bot: [webhooks](https://core.telegram.org/bots/api#setwebhook) (which we don't currently support) and polling.
 
-Polling simply call the [`:getUpdates`](https://core.telegram.org/bots/api#getupdates) endpoint in a loop with a long timeout, then handles the resulting list of `updates` however is needed.
+Polling simply calls the [`:getUpdates`](https://core.telegram.org/bots/api#getupdates) endpoint in a loop with a long timeout, then handles the resulting list of `updates` however is needed.
 
 We provide a function `tg-clj-server.poll/run-server` which does this, calling the given `handler` with a `request`.
 
-A `request` is a map of the `:update` and the `:client`.
-[Middleware](#middleware) can add other keys to this map.
+A `request` is a map of the `:update` and the `:client`. ([middleware](#middleware) can add other keys to this map)
 
 ```clojure
 (defn handler [{u :update :keys [client]}
@@ -35,9 +34,9 @@ A `request` is a map of the `:update` and the `:client`.
                  {:update-opts {:allowed_updates ["message"]}})
 ```
 
-If the handler throws an exception the server will ignore it and move onto the next `update`, if you want to handle them you will need to include some middleware to do so.
+If the handler throws an exception the server will ignore it and move on to the next `update`, if you want to handle them you will need to include some middleware to do so.
 
-But if the Telegram Bot API returns an error the server will throw an exception and halt.
+If the Telegram Bot API returns an error when fetching updates, the server will throw an exception and halt.
 
 Otherwise this function does nothing more, you'll need to add [routing](#routing) and [middleware](#middleware) to do more interesting things :D.
 
@@ -73,15 +72,16 @@ The **first** route who's predicate matches will have it's handler called with t
 
 As syntactic sugar:
 - The list of routes can be a map
-  - NOTE: This will mean you can't ensure the order routes are checked in
+  - NOTE: This will mean you can't ensure the order of routes
 - The predicate can be a valid command string beginning with `/`
-  - This checks if the update contains a call to the command
+  - This is replaced with a call to `tg-clj-server.utils/command?`
 - The "route data" can be a handler function
 
 For example:
 ```clojure
 (def routes
-  {poll? #'poll-handler
+  {poll? {:handler #'poll-handler
+          :other-data :goes-here}
    "/mycommand" #'command-handler})
 ```
 
@@ -91,7 +91,6 @@ For example:
 Middleware is a feature taken wholesale from [ring](https://github.com/ring-clojure/ring), so if you're familiar with it there then it works much the same here.
 
 Middleware works by "wrapping" the handler function in another function.
-
 You can use this to run code before or after a handler is run.
 
 For example the [`:me` middleware](./included-middleware.md#me) works something like this:
@@ -101,6 +100,7 @@ For example the [`:me` middleware](./included-middleware.md#me) works something 
 
 (defn me-middleware [handler]
   (fn [request]
+    ; Add :me to the request *before* the handler get's it
     (handler (assoc request :me (get-me)))))
 ```
 
@@ -109,9 +109,10 @@ And the [invoke middleware](./included-middleware.md#invoke) works something lik
 (defn do-invoke [client request]
   ...)
 
-(defn me-middleware [handler]
+(defn invoke-middleware [handler]
   (fn [request]
     (let [response (handler request)]
+      ; Use the response from the handler
       (if (:op response)
         (do-invoke (:client request) response)
         response))))
@@ -132,3 +133,5 @@ By using middleware you can extract parts of your system into more testable comp
 ```
 
 For a list of included middleware see [here](./included-middleware.md).
+
+See more about the default provided middleware [here](./defaults.md).

@@ -47,7 +47,7 @@ There are a few ways to control access to routes/commands on a bot:
 
 This middleware helps with the third option by having a global pool of admins.
 
-By including a `:admin-only true` in the route data for a route you can ensure that only admins in the global list will be allowed to use that route:
+By including `:admin-only true` in the route data for a route you can ensure that only admins in the global list will be allowed to use that route:
 
 ```clojure
 (defn public-handler [_]
@@ -66,7 +66,7 @@ By including a `:admin-only true` in the route data for a route you can ensure t
 
 The admin list is split into two parts: `base admins` and `stored admins`.
 
-`Base admins` are provided statically on as a set on the middleware and can only be removed by changing this list and restarting the app:
+`Base admins` are provided statically a set on the middleware and can only be removed by changing this list and restarting the app:
 ```clojure
 (defaults/make-app routes {:middleware [[admin/global-admin-middleware #{"me" 1234}]]})
 ```
@@ -78,10 +78,14 @@ A set of routes is provided at `tg-clj-server.middleware.global-admin-middleware
 ```clojure
 (def routes
   (merge {...} admin/global-admin-routes))
+
+; For a list of routes:
+(def routes
+  (concat [...] admin/global-admin-routes))
 ```
 
 These commands are:
-- `/admin_list`   - List the admins (not the `base admins`)
+- `/admin_list`   - List the **stored admins** (not the `base admins`)
 - `/admin_add`    - Add an admin to the `stored admins`
 - `/admin_remove` - Remove and admin from the `stored admins`
 
