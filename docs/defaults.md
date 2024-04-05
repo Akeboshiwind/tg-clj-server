@@ -1,7 +1,7 @@
 # Defaults
 
 As a convenience there is a function `tg-clj-server.defaults/make-app` which provides:
-- [Routing](docs/intro.md#routing) (as explained in the intro)
+- [Routing](./intro.md#routing) (as explained in the intro)
 - [Invoking the response](#invoke)
 - [Persistent Storage](#simple-store)
 - [The `:me` key](#me)

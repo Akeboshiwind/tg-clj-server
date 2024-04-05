@@ -6,9 +6,9 @@
 - [Middleware](#middleware)
 
 Additionally `tg-clj-server.defaults/make-app` provides:
-- [Invoking the response](docs/defaults.md#invoke)
-- [Persistent Storage](docs/defaults.md#simple-store)
-- [The `:me` key](docs/defaults.md#me)
+- [Invoking the response](./defaults.md#invoke)
+- [Persistent Storage](./defaults.md#simple-store)
+- [The `:me` key](./defaults.md#me)
 
 To build an app without using `make-app` see `examples/no_defaults.clj`.
 
@@ -69,7 +69,7 @@ A set of routes is simply a list of pairs:
 ```
 
 The **first** route who's predicate matches will have it's handler called with the `request`.
-(This is a slight simplification for more details see [here](docs/routing-details.md))
+(This is a slight simplification for more details see [here](./routing-details.md))
 
 As syntactic sugar:
 - The list of routes can be a map
@@ -94,7 +94,7 @@ Middleware works by "wrapping" the handler function in another function.
 
 You can use this to run code before or after a handler is run.
 
-For example the [`:me` middleware](docs/included-middleware.md#me) works something like this:
+For example the [`:me` middleware](./included-middleware.md#me) works something like this:
 ```clojure
 (defn get-me [client]
   ...)
@@ -104,7 +104,7 @@ For example the [`:me` middleware](docs/included-middleware.md#me) works somethi
     (handler (assoc request :me (get-me)))))
 ```
 
-And the [invoke middleware](docs/included-middleware.md#invoke) works something like this:
+And the [invoke middleware](./included-middleware.md#invoke) works something like this:
 ```clojure
 (defn do-invoke [client request]
   ...)
@@ -131,4 +131,4 @@ By using middleware you can extract parts of your system into more testable comp
     (my-middleware-2 arg1 arg2))
 ```
 
-For a list of included middleware see [here](docs/included-middleware.md).
+For a list of included middleware see [here](./included-middleware.md).

@@ -93,7 +93,7 @@ See `/examples/with_admin.clj` for a complete example.
 
 ## Invoke
 
-See the [defaults docs](docs/defaults.md#invoke) for a description.
+See the [defaults docs](./defaults.md#invoke) for a description.
 
 Usage of the raw middleware:
 
@@ -117,7 +117,7 @@ Usage of the raw middleware:
 
 ## Simple Store
 
-See the [defaults docs](docs/defaults.md#simple-store) for a description.
+See the [defaults docs](./defaults.md#simple-store) for a description.
 
 Usage of the raw middleware:
 
@@ -147,7 +147,7 @@ Usage of the raw middleware:
 
 ## Me
 
-See the [defaults docs](docs/defaults.md#me) for a description.
+See the [defaults docs](./defaults.md#me) for a description.
 
 Usage of the raw middleware:
 

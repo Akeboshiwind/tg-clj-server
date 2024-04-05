@@ -37,7 +37,7 @@ The middleware selects a route then attaches the `route data` to the `request` l
 ; => {:route <selected route> ...}
 ```
 
-This allows other middleware to intercept the selected route and modify it. See the [global admin middleware](docs/included-middleware.md#global-admin) for an example of this.
+This allows other middleware to intercept the selected route and modify it. See the [global admin middleware](./included-middleware.md#global-admin) for an example of this.
 
 Note that the middleware does not execute the `:handler` in the `route data`, that's what we need the second component for:
 
