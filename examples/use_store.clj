@@ -9,13 +9,15 @@
 
 ;; >> Handlers
 
-(defn reply-handler [{:keys [store] u :update}]
+(defn handler [{:keys [store] u :update}]
   (log/info "Reply handler")
   (let [my-count (or (:count store) 0)]
     (-> {:op :sendMessage
          :request {:text (str my-count " messages seen 👀")}}
         ; We have a handy util for replying to a message directly
         (u/reply-to u)
+        ; Be careful to update the existing store as it is `reset!`
+        ; under the hood and not merged
         (assoc :set-store (assoc store :count (inc my-count))))))
 
 
@@ -23,7 +25,7 @@
 ;; >> Routes
 
 (def routes
-  {"/reply" #'reply-handler})
+  [[(constantly true) #'handler]])
 
 
 
@@ -43,13 +45,12 @@
   ;; Run this to start
   (def f (future (main)))
 
-  ;; Available commands:
-  ;; - /reply - Replies with the count of calls so far and increases the count
+  ;; Responds to all messages with the count of messages seen so far
   ;;
-  ;; Try sending /reply a couple of times.
+  ;; Try sending a couple of message.
   ;; Then try stopping the repl and then try again.
   ;; You'll notice that the count is persisted.
-  ;; Take a look at /tmp/store.edn
+  ;; Then take a look at /tmp/store.edn
 
   ;; Run this to stop
   (future-cancel f))

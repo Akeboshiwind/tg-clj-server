@@ -9,14 +9,16 @@
 
 ;; >> Handlers
 
+(def my-count (atom 0))
+
 (defn hello-handler [{u :update}]
   (log/info "Hello handler")
-  ;; See the Telegram API docs for the request format
+  (swap! my-count inc)
+  ; The response is `tg/invoke`d if it contains an `:op` key
+  ; (See the Telegram Bot API docs for the request format)
   {:op :sendMessage
    :request {:text "Hi! 🤖"
              :chat_id (get-in u [:message :chat :id])}})
-
-(def my-count (atom 0))
 
 (defn reply-handler [{u :update}]
   (log/info "Reply handler")
@@ -39,7 +41,6 @@
    ; - Use (constantly true) as the last route
    ; - Set :router/not-found on default/make-app
    [(constantly true) #'reply-handler]])
-
 
 
 ;; >> App
