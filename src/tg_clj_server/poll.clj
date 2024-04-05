@@ -65,10 +65,10 @@
   "Given a client and handler, runs a 'server' which polls for updates and runs
   the handler on each update.
 
-  Throws away errors from the handler, add middleware to handle them.
+  Discards errors from the handler, add middleware to handle them.
   Throws an exception if the Telegram API returns an error.
   Retries internal errors (like connection errors) infinitely.
-  
+
   Optionally, you can pass in a map of options:
   :update-opts - A map of options to pass to the getUpdates request.
                  See the Telegram API for details.

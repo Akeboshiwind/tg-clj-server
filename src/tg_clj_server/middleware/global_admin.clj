@@ -95,7 +95,7 @@
   (def app
     (-> router/execute-route
         (admin/global-admin-middleware #{\"me\" 1234})
-        (store/simple-file-store-middleware \"/tmp/store.edn\")
+        (store/simple-store-middleware {:path \"/tmp/store.edn\"})
         invoke/invoke-middleware
         (router/select-route-middleware routes)))"
   ([handler]
