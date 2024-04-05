@@ -132,4 +132,5 @@ To run tests:
 
 1. Tag the commit `v<version>`
 2. `git push --tags`
-2. Update the README.md with the new version and git hash
+3. Update the README.md with the new version and git hash
+4. Update the CHANGELOG.md
