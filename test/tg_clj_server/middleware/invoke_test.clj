@@ -5,11 +5,11 @@
             [tg-clj-server.utils :as u])
   (:import (clojure.lang ExceptionInfo)))
 
-(deftest invoke-middleware
+(deftest middleware
   (testing "Calls tg/invoke with the request if :op is present in the response"
     (testing ":op present"
       (let [response {:op :myOp :request {:a 1}}
-            handler (invoke/invoke-middleware (constantly response))
+            handler (invoke/middleware (constantly response))
             invoke-op (atom :unset)]
         (with-redefs [tg/invoke (fn [_client op]
                                   (reset! invoke-op op)
@@ -17,7 +17,7 @@
           (handler {:client :client}))
         (is (= response @invoke-op))))
     (testing ":op not present"
-      (let [handler (invoke/invoke-middleware identity)
+      (let [handler (invoke/middleware identity)
             calls (atom 0)]
         (with-redefs [tg/invoke (fn [_client _op]
                                   (swap! calls inc)
@@ -28,7 +28,7 @@
   (testing "Retry on exception"
     (let [retry-fn #(u/retry % {:max-retries 1
                                 :wait-time 0})
-          handler (invoke/invoke-middleware (constantly {:op :myOp})
+          handler (invoke/middleware (constantly {:op :myOp})
                                             {:retry retry-fn})
           calls (atom 0)]
       (with-redefs [tg/invoke (fn [_client _op]
@@ -40,7 +40,7 @@
         (is (> @calls 1)))))
 
   (testing "Doesn't retry on Telegram API error"
-    (let [handler (invoke/invoke-middleware (constantly {:op :myOp}))
+    (let [handler (invoke/middleware (constantly {:op :myOp}))
           calls (atom 0)]
       (with-redefs [tg/invoke (fn [_client _op]
                                 (swap! calls inc)

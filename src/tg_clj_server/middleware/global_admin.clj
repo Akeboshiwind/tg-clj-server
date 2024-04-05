@@ -36,7 +36,7 @@
                            "No admins (yet)")}}
         (u/reply-to update))))
 
-(def global-admin-routes
+(def routes
   {"/admin_add" {:handler #'add-admin-handler
                  :admin-only true}
    "/admin_remove" {:handler #'remove-admin-handler
@@ -56,7 +56,7 @@
               (contains? admins user-id)))))
     true))
 
-(defn global-admin-middleware
+(defn middleware
   "Adds global admin functionalilty to the bot.
 
   To tell this middleware that a route should be admin-only set the `:admin-only`
@@ -65,7 +65,7 @@
   You can provide a set of admins in two ways:
   1. As a parameter to the middleware, this list of admins cannot be modified at runtime.
   2. Under [:store :admins] in the request, a set of commands under
-     `global-admin-routes` is proivded to modify the list of admins.
+     `admin/routes` is proivded to modify the list of admins.
 
   These lists are combined when checking for admin status.
   If no admins are provided, all users are considered admins.
@@ -75,7 +75,7 @@
 
   # Usage Notes
 
-  The `global-admin-routes` require the simple-file-store middleware, and for
+  `admin/routes` require the simple-file-store middleware, and for
   the routes to reply to messages they require the invoke middleware.
 
   If using the simple-file-store middleware, make sure it runs *before* this
@@ -90,16 +90,16 @@
     (merge
       {\"/public\" #'public-handler
        \"/secret\" {:handler #'secret-handler :admin-only true}}
-      admin/global-admin-routes))
+      admin/routes))
 
   (def app
     (-> router/execute-route
-        (admin/global-admin-middleware #{\"me\" 1234})
-        (store/simple-store-middleware {:path \"/tmp/store.edn\"})
-        invoke/invoke-middleware
+        (admin/middleware #{\"me\" 1234})
+        (store/middleware {:path \"/tmp/store.edn\"})
+        invoke/middleware
         (router/select-route-middleware routes)))"
   ([handler]
-   (global-admin-middleware handler nil))
+   (middleware handler nil))
   ([handler base-admins]
    (fn [{:keys [update] :as request}]
      (if (authorized? request base-admins)

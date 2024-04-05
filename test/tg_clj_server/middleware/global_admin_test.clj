@@ -52,9 +52,9 @@
       (is (every? #(re-find (re-pattern (str %)) text)
                   admins)))))
 
-(deftest global-admin-routes-test
+(deftest routes-test
   (testing "All admin-only"
-    (is (->> admin/global-admin-routes
+    (is (->> admin/routes
              vals
              (every? :admin-only)))))
 

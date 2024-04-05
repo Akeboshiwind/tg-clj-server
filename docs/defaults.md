@@ -54,7 +54,7 @@ To persist state between restarts as an edn file use the `:store/path` key on `t
 
 ; When using the raw middleware just use :path
 (-> handler
-    (store/simple-store-middleware {:path "/data/mystore.edn"}))
+    (store/middleware {:path "/data/mystore.edn"}))
 ```
 
 Sometimes you want to be able to read from the atom elsewhere in the app.

@@ -11,7 +11,7 @@
       (reset! cache new-me)
       new-me)))
 
-(defn me-middleware
+(defn middleware
   "Adds the :me key to the request map, containing the user object for the client.
 
   Assumes the client is the same for each request."

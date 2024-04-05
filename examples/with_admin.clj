@@ -64,14 +64,14 @@
      "/stop" {:handler #'stop-timer-handler
               :admin-only true}
      "/status" #'status-handler}
-    admin/global-admin-routes))
+    admin/routes))
 
 
 
 ;; >> App
 
 (def app
-  (defaults/make-app routes {:middleware [admin/global-admin-middleware]}))
+  (defaults/make-app routes {:middleware [admin/middleware]}))
 
 (defn main []
   (let [client (tg/make-client {:token "<your token>"})]

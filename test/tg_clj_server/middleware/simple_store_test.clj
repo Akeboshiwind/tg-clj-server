@@ -17,7 +17,7 @@
 (deftest store-middleware
   (testing "The store is added to the request"
     (let [final-request (atom :unset)
-          handler (store/simple-store-middleware
+          handler (store/middleware
                    (fn [request]
                      (reset! final-request request)))]
       (handler {})
@@ -26,7 +26,7 @@
   (testing "A user can save data to the store"
     (let [data {:a 1}
           final-request (atom :unset)
-          handler (store/simple-store-middleware
+          handler (store/middleware
                    (fn [{:keys [op] :as request}]
                      (reset! final-request request)
                      (case op
@@ -54,7 +54,7 @@
   (testing "In-memory stores lose data between restarts"
     (let [; Create first middleware instance
           last-store (atom :unset)
-          handler (store/simple-store-middleware
+          handler (store/middleware
                    (fn [{:keys [store]}]
                      (reset! last-store store)
                      {:set-store {:a 1}}))]
@@ -65,7 +65,7 @@
       (is (= {:a 1} @last-store)))
     (let [; Create a new middleware instance
           last-store (atom :unset)
-          handler (store/simple-store-middleware
+          handler (store/middleware
                    (fn [{:keys [store]}]
                      (reset! last-store store)))]
       ; Get the store
@@ -79,14 +79,14 @@
         (let [; Create first middleware instance
               handler (-> (fn [_request]
                             {:set-store data})
-                          (store/simple-store-middleware {:path path}))]
+                          (store/middleware {:path path}))]
           ; Set the store
           (handler {}))
         (let [; Create a new middleware instance
               final-request (atom :unset)
               handler (-> (fn [request]
                             (reset! final-request request))
-                          (store/simple-store-middleware {:path path}))]
+                          (store/middleware {:path path}))]
           ; Get the store
           (handler {})
           (is (= {:store data} @final-request))))))
@@ -98,7 +98,7 @@
           handler (-> (fn [{:keys [store]}]
                         (reset! last-store store)
                         {:set-store data})
-                      (store/simple-store-middleware
+                      (store/middleware
                        {:atom external-atom}))]
       ; Set the store
       (handler {})

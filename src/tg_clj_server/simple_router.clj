@@ -79,7 +79,7 @@
   (def app
     (-> router/execute-route
         (router/select-route-middleware routes)
-        invoke/invoke-middleware))"
+        invoke/middleware))"
   ([handler routes]
    (select-route-middleware handler routes {}))
   ([handler routes {:keys [not-found]}]

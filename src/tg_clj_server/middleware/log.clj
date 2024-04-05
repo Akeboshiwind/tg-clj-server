@@ -1,9 +1,9 @@
 (ns tg-clj-server.middleware.log
   (:require [clojure.tools.logging :as log]))
 
-(defn log-middleware
+(defn middleware
   ([handler]
-   (log-middleware handler nil))
+   (middleware handler nil))
   ([handler name]
    (let [name (when name
                 (str "(" name ")"))]

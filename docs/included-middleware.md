@@ -1,13 +1,13 @@
 # Included Middleware
 
 Some additional middleware provided are:
-- [`log-middleware`](#log)
-- [`global-admin-middleware`](#global-admin)
+- [`log`](#log)
+- [`global-admin`](#global-admin)
 
 And part of `tg-clj-server.defaults` we have:
-- [`invoke-middleware`](#invoke)
-- [`simple-store-middleware`](#simple-store)
-- [`me-middleware`](#me)
+- [`invoke`](#invoke)
+- [`simple-store`](#simple-store)
+- [`me`](#me)
 
 ## Log
 
@@ -17,17 +17,17 @@ Optionally takes a `name` which is prepended to the log line.
 
 ```clojure
 (-> handler
-    log/log-middleware)
+    log/middleware)
 
 ; In a `defaults` app:
-(defaults/make-app routes {:middleware [log/log-middleware]})
+(defaults/make-app routes {:middleware [log/middleware]})
 
 ; Optionally supply a name
 (-> handler
-    (log/log-middleware "pre-middleware1"))
+    (log/middleware "pre-middleware1"))
 
 ; In a `defaults` app:
-(defaults/make-app routes {:middleware [[log/log-middleware "pre-middleware1"]]})
+(defaults/make-app routes {:middleware [[log/middleware "pre-middleware1"]]})
 
 ; Log outputs look something like:
 ; INFO: Request(pre-middleware1): {<the request>}
@@ -61,27 +61,27 @@ By including `:admin-only true` in the route data for a route you can ensure tha
    "/secret" {:handler #'secret-handler
               :admin-only true}})
 
-(defaults/make-app routes {:middleware [admin/global-admin-middleware]})
+(defaults/make-app routes {:middleware [admin/middleware]})
 ```
 
 The admin list is split into two parts: `base admins` and `stored admins`.
 
 `Base admins` are provided statically a set on the middleware and can only be removed by changing this list and restarting the app:
 ```clojure
-(defaults/make-app routes {:middleware [[admin/global-admin-middleware #{"me" 1234}]]})
+(defaults/make-app routes {:middleware [[admin/middleware #{"me" 1234}]]})
 ```
 
 And `stored admins` are stored at `[:store :admins]`. Use the [`simple store`](#simple-store) to persist this list of admins.
 
-A set of routes is provided at `tg-clj-server.middleware.global-admin-middleware/routes`:
+A set of routes is provided at `tg-clj-server.middleware.middleware/routes`:
 
 ```clojure
 (def routes
-  (merge {...} admin/global-admin-routes))
+  (merge {...} admin/routes))
 
 ; For a list of routes:
 (def routes
-  (concat [...] admin/global-admin-routes))
+  (concat [...] admin/routes))
 ```
 
 These commands are:
@@ -108,13 +108,13 @@ Usage of the raw middleware:
              :text "hi"}})
 
 (-> handler
-    invoke/invoke-middleware)
+    invoke/middleware)
 
 ; Optionally supply a retry function
 ; Retries on client errors, not telegram api errors
 ; Defaults to retrying 3 times every 100ms
 (-> handler
-    (invoke/invoke-middleware {:retry #(u/retry % {:max-retries 4})}))
+    (invoke/middleware {:retry #(u/retry % {:max-retries 4})}))
 ```
 
 
@@ -131,17 +131,17 @@ Usage of the raw middleware:
   {:set-store (assoc store :a 1)})
 
 (-> handler
-    store/simple-store-middleware)
+    store/middleware)
 
 ; Optionally supply a path
 (-> handler
-    (store/simple-store-middleware {:path "/tmp/file.edn"}))
+    (store/middleware {:path "/tmp/file.edn"}))
 
 ; Optionally supply an atom
 (def my-store (atom nil))
 (def app
   (-> handler
-      (store/simple-store-middleware {:atom my-store})))
+      (store/middleware {:atom my-store})))
 
 (app {})
 @my-store ; => {:a 1}
@@ -160,5 +160,5 @@ Usage of the raw middleware:
   ...)
 
 (-> handler
-    me/me-middleware)
+    me/middleware)
 ```

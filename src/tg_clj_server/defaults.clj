@@ -30,9 +30,9 @@
   (-> router/execute-route
       (u/chain-middleware middleware)
       ; Before the middleware so they have access to the store
-      (store/simple-store-middleware {:path path :atom atom})
+      (store/middleware {:path path :atom atom})
       (router/select-route-middleware routes {:not-found not-found})
       ; Before the router, required for `u/command?` which may be used in routes
-      me/me-middleware
+      me/middleware
       ; Last middleware to be called, so we can invoke the response
-      invoke/invoke-middleware))
+      invoke/middleware))

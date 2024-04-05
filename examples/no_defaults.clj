@@ -11,7 +11,7 @@
 
 (defn hello-handler [{u :update :keys [client me]}]
   (log/info "Hello handler")
-  ; No `invoke-middleware` so we call invoke ourselves
+  ; No `invoke` middleware so we call `invoke` ourselves
   (tg/invoke client
              {:op :sendMessage
               :request {:text (str "Hello, I am " (:username me))
@@ -32,7 +32,7 @@
 (def app
   (-> router/execute-route
       ; Put more middleware here
-      me/me-middleware
+      me/middleware
       (router/select-route-middleware routes)))
       ; Put more middleware here
 

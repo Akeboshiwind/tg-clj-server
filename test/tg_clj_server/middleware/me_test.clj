@@ -3,10 +3,10 @@
             [tg-clj-server.middleware.me :as me]
             [tg-clj.core :as tg]))
 
-(deftest me-middleware
+(deftest middleware
   (testing "Adds the :me key to the request map, containing the user object for the client."
     (let [final-request (atom :unset)
-          handler (me/me-middleware
+          handler (me/middleware
                    (fn [request]
                      (reset! final-request request)))
           request {:client :client}]
@@ -17,7 +17,7 @@
              @final-request))))
 
   (testing "The user object is cached"
-    (let [handler (me/me-middleware identity)
+    (let [handler (me/middleware identity)
           request {:client :client}
           calls (atom 0)]
       (with-redefs [tg/invoke (fn [_client _op]
@@ -28,8 +28,8 @@
         (is (= 1 @calls)))))
 
   (testing "Two instances have different caches"
-    (let [handler1 (me/me-middleware identity)
-          handler2 (me/me-middleware identity)
+    (let [handler1 (me/middleware identity)
+          handler2 (me/middleware identity)
           request {:client :client}
           calls (atom 0)]
       (with-redefs [tg/invoke (fn [_client _op]

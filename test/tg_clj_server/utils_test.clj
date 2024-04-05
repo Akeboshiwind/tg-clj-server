@@ -26,7 +26,7 @@
   (testing ":me middleware integration"
     (let [cmd? (partial u/command? "/version")
           handler (-> (fn [request] (cmd? request))
-                      me/me-middleware)
+                      me/middleware)
           ->request (fn [text] {:update {:message {:text text}}})]
       (with-redefs [tg/invoke (fn [_client _request]
                                 {:result {:username "mybot"}})]

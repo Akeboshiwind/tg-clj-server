@@ -11,7 +11,7 @@
 (defn save-edn [data path]
   (spit path (pr-str data)))
 
-(defn simple-store-middleware
+(defn middleware
   "Adds a :store key to the request.
   
   If the response contains :set-store the store will be updated.
@@ -33,7 +33,7 @@
        :request {:text \"Loading store\"}
        :set-store {:a 1}}))"
   ([handler]
-   (simple-store-middleware handler {}))
+   (middleware handler {}))
   ([handler {:keys [path] external-atom :atom}]
    (let [store (if external-atom
                  external-atom
