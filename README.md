@@ -11,6 +11,12 @@ A more framework-y library for use with [tg-clj](https://github.com/Akeboshiwind
   <a href="https://github.com/Akeboshiwind/tg-clj">tg-clj</a>
 </p>
 
+> [!CAUTION]
+> `tg-clj-server` and `tg-clj` are considered alpha!
+>
+> I'll put a warning in the [changelog](/CHANGELOG.md) when a breaking change happens.
+> This warning will be removed once I consider the API stable.
+
 
 
 ## Why
