@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.1
+
+- Bumped the `tg-clj` version to 0.3.0
+- Bump the `:getUpdates` timeout to 30s
+- Encourage setting a client timeout in `make-client`
+
+Working on a library called `gully` which will probably replace the router.
+It's still got a lot of time left in the hammock though I think.
+
 ## 0.3.0
 
 Add lots more docs! Start with the [readme](./README.md) then head over to the [intro](./docs/intro.md).
