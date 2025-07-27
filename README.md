@@ -53,7 +53,7 @@ For the full bot see `/examples/simple.clj`.
 Use as a dependency in `deps.edn` or `bb.edn`:
 
 ```clojure
-io.github.akeboshiwind/tg-clj {:git/tag "v0.2.2" :git/sha "f742d7e"}
+io.github.akeboshiwind/tg-clj {:git/tag "v0.3.0" :git/sha "4852eb5"}
 io.github.akeboshiwind/tg-clj-server {:git/tag "v0.3.0" :git/sha "8c66e84"}
 ```
 

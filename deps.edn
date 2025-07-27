@@ -5,7 +5,7 @@
  :aliases
  {:dev {:extra-paths ["test"]
         :extra-deps {org.clojure/clojure {:mvn/version "1.11.1"}
-                     io.github.akeboshiwind/tg-clj {:git/tag "v0.2.1" :git/sha "1a913bc"}}}
+                     io.github.akeboshiwind/tg-clj {:git/tag "v0.3.0" :git/sha "4852eb5"}}}
 
   :test {:extra-paths ["test"]
          :extra-deps {io.github.cognitect-labs/test-runner
