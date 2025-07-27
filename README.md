@@ -39,7 +39,8 @@ nicer (and more testable) to build it out of modular components:
   [["/hello" #'hello-handler]
    [(constantly true) #'reply-handler]])
 
-(let [client (tg/make-client {:token "<your token>"})
+;; The client timeout must be greater than the getUpdates timeout (default to 30s)
+(let [client (tg/make-client {:token "<your token>" :timeout 35000})
       app (defaults/make-app routes)]
   (tg-poll/run-server client app))
 ```
@@ -111,7 +112,7 @@ Then finally you can run the server with a client:
 (require '[tg-clj.core :as tg]
          '[tg-clj-server.poll :as tg-poll])
 
-(let [client (tg/make-client {:token "<your token>"})]
+(let [client (tg/make-client {:token "<your token>" :timeout 35000})]
   ; Warning, This will block!
   (tg-poll/run-server client app))
 ```

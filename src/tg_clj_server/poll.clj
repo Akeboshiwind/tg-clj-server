@@ -80,7 +80,7 @@
                  :handler handler
                  :updates []
                  :latest-offset nil
-                 :fetch/update-opts (merge {:timeout 5} update-opts)
+                 :fetch/update-opts (merge {:timeout 30} update-opts)
                  :fetch/wait-time (if (number? wait-time)
                                     (constantly wait-time)
                                     (or wait-time (constantly 5000)))}]

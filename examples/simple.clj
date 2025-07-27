@@ -49,7 +49,7 @@
   (defaults/make-app routes))
 
 (defn main []
-  (let [client (tg/make-client {:token "<your token>"})]
+  (let [client (tg/make-client {:token "<your token>" :timeout 35000})]
     (tg-poll/run-server client app)))
 
 (comment
