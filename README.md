@@ -55,7 +55,7 @@ Use as a dependency in `deps.edn` or `bb.edn`:
 
 ```clojure
 io.github.akeboshiwind/tg-clj {:git/tag "v0.3.0" :git/sha "4852eb5"}
-io.github.akeboshiwind/tg-clj-server {:git/tag "v0.3.0" :git/sha "8c66e84"}
+io.github.akeboshiwind/tg-clj-server {:git/tag "v0.3.1" :git/sha "8ec86b2"}
 ```
 
 
