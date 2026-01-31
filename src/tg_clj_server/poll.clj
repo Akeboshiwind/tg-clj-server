@@ -65,6 +65,8 @@
   "Given a client and handler, runs a 'server' which polls for updates and runs
   the handler on each update.
 
+  Returns a stop function. Call it to stop the server.
+
   Discards errors from the handler, add middleware to handle them.
   Throws an exception if the Telegram API returns an error.
   Retries internal errors (like connection errors) infinitely.
@@ -76,18 +78,23 @@
   ([client handler]
    (run-server client handler {}))
   ([client handler {:keys [update-opts wait-time]}]
-   (loop [state {:client client
-                 :handler handler
-                 :updates []
-                 :latest-offset nil
-                 :fetch/update-opts (merge {:timeout 30} update-opts)
-                 :fetch/wait-time (if (number? wait-time)
-                                    (constantly wait-time)
-                                    (or wait-time (constantly 5000)))}]
-     (if (seq (:updates state))
-       (do
-         (handle-update! state)
-         (recur (next-updates state)))
-       (let [request (updates-request state)
-             updates (fetch-updates! state request)]
-         (recur (concat-updates state updates)))))))
+   (let [f (future
+             (loop [state {:client client
+                           :handler handler
+                           :updates []
+                           :latest-offset nil
+                           :fetch/update-opts (merge {:timeout 30} update-opts)
+                           :fetch/wait-time (if (number? wait-time)
+                                              (constantly wait-time)
+                                              (or wait-time (constantly 5000)))}]
+               (if (seq (:updates state))
+                 (do
+                   (handle-update! state)
+                   (recur (next-updates state)))
+                 (let [request (updates-request state)
+                       updates (fetch-updates! state request)]
+                   (recur (concat-updates state updates))))))]
+     (log/info "Poll server started")
+     (fn []
+       (future-cancel f)
+       (log/info "Poll server stopped")))))

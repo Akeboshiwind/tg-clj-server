@@ -43,7 +43,7 @@
 
 (comment
   ;; Run this to start
-  (def f (future (main)))
+  (def stop (main))
 
   ;; Responds to all messages with the count of messages seen so far
   ;;
@@ -53,4 +53,4 @@
   ;; Then take a look at /tmp/store.edn
 
   ;; Run this to stop
-  (future-cancel f))
+  (stop))

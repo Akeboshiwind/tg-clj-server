@@ -12,7 +12,17 @@
 (require '[tg-clj-server.defaults.poll :as defaults])
 ```
 
-This prepares for webhook support which will have its own `tg-clj-server.defaults.webhook`.
+**Breaking**: `poll/run-server` now returns a stop function instead of blocking
+
+```clojure
+; Before
+(def f (future (poll/run-server client app)))
+(future-cancel f)
+
+; After
+(def stop (poll/run-server client app))
+(stop)
+```
 
 ## 0.3.1
 

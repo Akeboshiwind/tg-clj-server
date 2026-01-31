@@ -42,7 +42,7 @@ nicer (and more testable) to build it out of modular components:
 ;; The client timeout must be greater than the getUpdates timeout (default to 30s)
 (let [client (tg/make-client {:token "<your token>" :timeout 35000})
       app (defaults/make-app routes)]
-  (tg-poll/run-server client app))
+  (def stop (tg-poll/run-server client app)))
 ```
 
 For the full bot see `/examples/simple.clj`.
@@ -111,9 +111,19 @@ Then finally you can run the server with a client:
 (require '[tg-clj.core :as tg]
          '[tg-clj-server.poll :as tg-poll])
 
-(let [client (tg/make-client {:token "<your token>" :timeout 35000})]
-  ; Warning, This will block!
-  (tg-poll/run-server client app))
+(def client (tg/make-client {:token "<your token>" :timeout 35000}))
+(def stop (tg-poll/run-server client app))
+
+; Block forever
+@(promise)
+```
+
+For graceful shutdown on Ctrl+C:
+
+```clojure
+(def stop (tg-poll/run-server client app))
+(.addShutdownHook (Runtime/getRuntime) (Thread. stop))
+@(promise)
 ```
 
 And that's it! Try out your new bot 🤖

@@ -26,11 +26,15 @@ A `request` is a map of the `:update` and the `:client`. ([middleware](#middlewa
 (defn handler [{u :update :keys [client]}
   ...)
 
-(poll/run-server client handler)
+; Returns a stop function
+(def stop (poll/run-server client handler))
+
+; Call it to stop the server
+(stop)
 
 ; Optionally provide an opts map
 ; See the docstring for more
-(poll/run-server client handler 
+(poll/run-server client handler
                  {:update-opts {:allowed_updates ["message"]}})
 ```
 

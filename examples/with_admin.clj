@@ -79,7 +79,7 @@
 
 (comment
   ;; Run this to start
-  (def f (future (main)))
+  (def stop (main))
 
   ;; Available commands:
   ;; - /start - starts a timer
@@ -99,4 +99,4 @@
   ;; Try /admin_remove @your_username to reset the admin list
 
   ;; Run this to stop
-  (future-cancel f))
+  (stop))

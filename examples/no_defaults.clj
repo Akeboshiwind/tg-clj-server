@@ -42,10 +42,10 @@
 
 (comment
   ;; Run this to start
-  (def f (future (main)))
+  (def stop (main))
 
   ;; Available commands:
   ;; - /hello - Posts a message after the command is input
 
   ;; Run this to stop
-  (future-cancel f))
+  (stop))
