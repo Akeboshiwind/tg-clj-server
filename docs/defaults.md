@@ -1,6 +1,6 @@
 # Defaults
 
-As a convenience there is a function `tg-clj-server.defaults/make-app` which provides:
+As a convenience there is a function `tg-clj-server.defaults.poll/make-app` which provides:
 - [Routing](./intro.md#routing) (as explained in the intro)
 - [Invoking the response](#invoke)
 - [Persistent Storage](#simple-store)
@@ -48,7 +48,7 @@ For example:
 
 By default the store is in-memory only, meaning that state is persisted between `requests` but not between restarts.
 
-To persist state between restarts as an edn file use the `:store/path` key on `tg-clj-server.defaults/make-app`:
+To persist state between restarts as an edn file use the `:store/path` key on `tg-clj-server.defaults.poll/make-app`:
 ```clojure
 (defaults/make-app routes {:store/path "/data/mystore.edn"})
 

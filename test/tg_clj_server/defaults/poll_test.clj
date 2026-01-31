@@ -1,6 +1,6 @@
-(ns tg-clj-server.defaults-test
+(ns tg-clj-server.defaults.poll-test
   (:require [clojure.test :refer [deftest testing is]]
-            [tg-clj-server.defaults :as defaults]
+            [tg-clj-server.defaults.poll :as defaults]
             [tg-clj.core :as tg]))
 
 (defn funky? [request]

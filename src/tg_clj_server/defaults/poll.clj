@@ -1,4 +1,4 @@
-(ns tg-clj-server.defaults
+(ns tg-clj-server.defaults.poll
   (:refer-clojure :exclude [atom])
   (:require [tg-clj-server.simple-router :as router]
             [tg-clj-server.middleware.invoke :as invoke]

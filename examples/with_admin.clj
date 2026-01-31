@@ -3,7 +3,7 @@
             [tg-clj-server.poll :as tg-poll]
             [tg-clj-server.utils :as u]
             [tg-clj-server.middleware.global-admin :as admin]
-            [tg-clj-server.defaults :as defaults]
+            [tg-clj-server.defaults.poll :as defaults]
 
             [clojure.tools.logging :as log]))
 

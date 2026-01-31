@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+**Breaking**: `tg-clj-server.defaults` moved to `tg-clj-server.defaults.poll`
+
+```clojure
+; Before
+(require '[tg-clj-server.defaults :as defaults])
+
+; After
+(require '[tg-clj-server.defaults.poll :as defaults])
+```
+
+This prepares for webhook support which will have its own `tg-clj-server.defaults.webhook`.
+
 ## 0.3.1
 
 - Bumped the `tg-clj` version to 0.3.0

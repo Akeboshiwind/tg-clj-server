@@ -5,7 +5,7 @@
 - [Routing](#routing)
 - [Middleware](#middleware)
 
-Additionally `tg-clj-server.defaults/make-app` provides:
+Additionally `tg-clj-server.defaults.poll/make-app` provides:
 - [Invoking the response](./defaults.md#invoke)
 - [Persistent Storage](./defaults.md#simple-store)
 - [The `:me` key](./defaults.md#me)

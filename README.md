@@ -82,7 +82,6 @@ To get things setup you'll need some routes:
                     ; We have a handy util for replying to a message directly
                     (u/reply-to u)))}]
    ; As syntactic sugar:
-   ; - You can supply a string command
    ; - A handler function
    ["/command"
     (fn [{u :update}]
@@ -94,7 +93,7 @@ To get things setup you'll need some routes:
 Then you'll need to create an `app` with those routes:
 
 ```clojure
-(require '[tg-clj-server.defaults :as defaults])
+(require '[tg-clj-server.defaults.poll :as defaults])
 
 (def app
   (defaults/make-app routes {; You can supply additional middleware here

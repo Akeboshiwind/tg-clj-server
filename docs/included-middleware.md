@@ -4,7 +4,7 @@ Some additional middleware provided are:
 - [`log`](#log)
 - [`global-admin`](#global-admin)
 
-And part of `tg-clj-server.defaults` we have:
+And part of `tg-clj-server.defaults.poll` we have:
 - [`invoke`](#invoke)
 - [`simple-store`](#simple-store)
 - [`me`](#me)
