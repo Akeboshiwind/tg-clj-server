@@ -1,7 +1,7 @@
 # Introduction
 
 `tg-clj-server` provides three main components to compose a bot:
-- [Polling](#polling)
+- [Polling](#polling) or [Webhooks](#webhooks)
 - [Routing](#routing)
 - [Middleware](#middleware)
 
@@ -14,7 +14,7 @@ To build an app without using `make-app` see `examples/no_defaults.clj`.
 
 ## Polling
 
-There are two ways to write a telegram bot: [webhooks](https://core.telegram.org/bots/api#setwebhook) (which we don't currently support) and polling.
+There are two ways to write a telegram bot: [webhooks](#webhooks) and polling.
 
 Polling simply calls the [`:getUpdates`](https://core.telegram.org/bots/api#getupdates) endpoint in a loop with a long timeout, then handles the resulting list of `updates` however is needed.
 
@@ -43,6 +43,39 @@ If the handler throws an exception the server will ignore it and move on to the 
 If the Telegram Bot API returns an error when fetching updates, the server will throw an exception and halt.
 
 Otherwise this function does nothing more, you'll need to add [routing](#routing) and [middleware](#middleware) to do more interesting things :D.
+
+
+## Webhooks
+
+Webhooks are an alternative to [polling](#polling). Instead of your bot calling Telegram, Telegram calls your bot when there's an update.
+
+Use `tg-clj-server.webhook/run-server` to start a webhook server:
+
+```clojure
+(require '[tg-clj-server.webhook :as webhook]
+         '[tg-clj-server.defaults.webhook :as defaults])
+
+(def app (defaults/make-app routes))
+
+; Returns a stop function
+(def stop (webhook/run-server client app {:port 8080
+                                          :secret-token "..."}))
+
+; Call it to stop the server
+(stop)
+```
+
+Note: Use `tg-clj-server.defaults.webhook/make-app` for webhooks (not the poll version). This excludes the invoke middleware since the response is returned in the webhook body for Telegram to execute.
+
+You'll need to register your webhook URL with Telegram:
+
+```clojure
+(tg/invoke client {:op :setWebhook
+                   :request {:url "https://example.com/webhook"
+                             :secret_token "..."}})
+```
+
+The `:secret-token` option validates the `X-Telegram-Bot-Api-Secret-Token` header to ensure requests are from Telegram.
 
 
 ## Routing

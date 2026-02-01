@@ -24,6 +24,16 @@
 (stop)
 ```
 
+**New**: Webhook support via `tg-clj-server.webhook/run-server`
+
+```clojure
+(require '[tg-clj-server.webhook :as webhook]
+         '[tg-clj-server.defaults.webhook :as defaults])
+
+(def app (defaults/make-app routes))
+(def stop (webhook/run-server client app {:port 8080 :secret-token "..."}))
+```
+
 ## 0.3.1
 
 - Bumped the `tg-clj` version to 0.3.0
