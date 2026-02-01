@@ -1,11 +1,11 @@
 (ns tg-clj-server.webhook
   (:require [org.httpkit.server :as http-kit]
             [clojure.tools.logging :as log]
-            [cheshire.core :as json])
+            [clojure.data.json :as json])
   (:import (java.lang InterruptedException)))
 
 (defn- parse-body [request]
-  (-> request :body slurp (json/decode true)))
+  (-> request :body slurp (json/read-str :key-fn keyword)))
 
 (defn- validate-request
   "Returns error response map if invalid, nil if valid"
@@ -32,7 +32,7 @@
           (if (:op response)
             {:status 200
              :headers {"Content-Type" "application/json"}
-             :body (json/encode (->telegram-method response))}
+             :body (json/write-str (->telegram-method response))}
             {:status 200 :body "OK"}))
         (catch Throwable t
           ;; Allow interrupts to bubble up

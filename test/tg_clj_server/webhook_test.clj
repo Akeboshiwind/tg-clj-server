@@ -1,7 +1,7 @@
 (ns tg-clj-server.webhook-test
   (:require [clojure.test :refer [deftest testing is]]
             [tg-clj-server.webhook :as webhook]
-            [cheshire.core :as json])
+            [clojure.data.json :as json])
   (:import [java.io ByteArrayInputStream]))
 
 (defn- string->input-stream [s]
@@ -71,7 +71,7 @@
           response (ring-handler (make-request {:body "{\"update_id\": 1}"}))]
       (is (= 200 (:status response)))
       (is (= "application/json" (get-in response [:headers "Content-Type"])))
-      (let [body (json/decode (:body response) true)]
+      (let [body (json/read-str (:body response) :key-fn keyword)]
         (is (= "sendMessage" (:method body)))
         (is (= 123 (:chat_id body)))
         (is (= "Hi" (:text body))))))

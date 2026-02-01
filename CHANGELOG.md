@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Switched from Cheshire to `clojure.data.json` (zero transitive dependencies)
+
 **Breaking**: `tg-clj-server.defaults` moved to `tg-clj-server.defaults.poll`
 
 ```clojure
