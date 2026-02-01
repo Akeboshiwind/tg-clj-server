@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
 
-Switched from Cheshire to `clojure.data.json` (zero transitive dependencies)
+- Switched from Cheshire to `clojure.data.json` (zero transitive dependencies)
+- `tg-clj` is now a proper dependency (no need to add it separately)
 
 **Breaking**: `tg-clj-server.defaults` moved to `tg-clj-server.defaults.poll`
 
